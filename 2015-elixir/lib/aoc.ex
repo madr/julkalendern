@@ -1,12 +1,9 @@
 defmodule Aoc do
-  @moduledoc """
-  Solutions for Advent of Code 2020, written in Elixir 1.11.1.
-  """
-
+  @year 2021
   def solve_all() do
     """
 
-    ADVENT OF CODE 2020
+    ADVENT OF CODE #{@year}
     ===================
     """
     |> IO.puts()

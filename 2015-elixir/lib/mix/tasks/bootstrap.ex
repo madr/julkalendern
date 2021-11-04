@@ -3,6 +3,9 @@ defmodule Mix.Tasks.Aoc.New do
 
   @shortdoc "Bootstrap new solution"
   @impl Mix.Task
+
+  @year 2021
+
   def run([n, name]) do
     id = n |> String.pad_leading(2, "0")
 
@@ -17,17 +20,17 @@ defmodule Mix.Tasks.Aoc.New do
     File.write!(test_file, test_file_content(id))
 
     IO.puts("Creating " <> solution_file)
-    File.write!(solution_file, solution_file_content(name, id))
+    File.write!(solution_file, solution_file_content(name, id, n))
 
     """
     \nDone! Start coding.
 
     Get your puzzle input here:
-    https://adventofcode.com/2015/day/#{id}/input
+    https://adventofcode.com/#{@year}/day/#{n}/input
 
     mix test                 -- run tests.
-    mix Aoc.solve_all        -- run all puzzles, starting with 1
-    mix Aoc.solve #{id}         -- run single puzzle, 1-25
+    mix aoc.solve_all        -- run all puzzles, starting with 1
+    mix aoc.solve #{id}         -- run single puzzle, 1-25
     """
     |> IO.puts()
   end
@@ -48,22 +51,22 @@ defmodule Mix.Tasks.Aoc.New do
       test "solves first part" do
         a = "something" |> parse!() |> solve_first_part()
 
-        expect a == :something
+        assert a == :something
       end
 
       test "solves second part" do
         a = "something" |> parse!() |> solve_second_part()
 
-        expect a == :something
+        assert a == :something
       end
     end
     """
   end
 
-  defp solution_file_content(name, id) do
+  defp solution_file_content(name, id, n) do
     ~s"""
     defmodule Aoc.Solution.Day#{id} do
-      @name "#{name}"
+      @name "Day #{n}: #{name}"
       @behaviour Solution
 
       @impl Solution
