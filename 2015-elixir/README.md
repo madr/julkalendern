@@ -1,8 +1,8 @@
 # Aoc
 
-Solutions for [Advent of Code 2020][1], this year in Elixir.
+Solutions for [Advent of Code 2021][1], this year in Elixir.
 
-[Elixir 1.11.1][2] preferred.
+[Elixir 1.12.3][2] preferred.
 
 ## Help scripts
 
