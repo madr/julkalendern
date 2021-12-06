@@ -1,4 +1,5 @@
 from solutions import BaseSolution
+from collections import Counter, deque
 
 
 class Solution(BaseSolution):
@@ -17,12 +18,15 @@ class Solution(BaseSolution):
         return self._produce(puzzle_input, 256)
 
     def _produce(self, puzzle_input, tf):
-        f = [*puzzle_input]
-        for _ in range(tf):
-            n = [8 for __ in range(sum(x <= 0 and x % 7 == 0 for x in f))]
-            f = list(map(lambda x: x - 1, f))
-            f.extend(n)
-        return len(f)
+        f = Counter(puzzle_input)
+        s = deque([0] * 9)
+        for i in range(9):
+            s[i] = f[i]
+        for _d in range(tf):
+            e = s.popleft()
+            s[6] += e
+            s.append(e)
+        return sum(s)
 
 
 if __name__ == "__main__":

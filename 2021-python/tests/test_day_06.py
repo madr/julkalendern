@@ -21,8 +21,8 @@ class Day06TestCase(unittest.TestCase):
     def test_solve_first_part(self):
         assert self.solution.solve(self.puzzle_input) == 5934
 
-    # def test_solve_second_part(self):
-    #    assert self.solution.solve_again(self.puzzle_input) == 26984457539
+    def test_solve_second_part(self):
+        assert self.solution.solve_again(self.puzzle_input) == 26984457539
 
 
 if __name__ == "__main__":
