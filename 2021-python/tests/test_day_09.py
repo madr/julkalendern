@@ -29,8 +29,8 @@ class Day09TestCase(unittest.TestCase):
     def test_solve_first_part(self):
         assert self.solution.solve(self.puzzle_input) == 15
 
-    # def test_solve_second_part(self):
-    #     assert self.solution.solve_again(self.puzzle_input) == True
+    def test_solve_second_part(self):
+        assert self.solution.solve_again(self.puzzle_input) == 9 * 14 * 9  # 891684
 
 
 if __name__ == "__main__":
