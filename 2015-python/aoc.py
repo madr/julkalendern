@@ -1,6 +1,6 @@
 import sys
 
-year = 2021
+year = 2015
 
 try:
     _, day_no, name = sys.argv
@@ -9,9 +9,7 @@ except ValueError:
     name = None
 
 print(
-    f"\nAdvent of Code {year}"
-    "\n###################"
-    "\n\nby Anders Ytterström (@madr_se)"
+    f"\nAdvent of Code {year}" "\n###################" "\n\nby Anders Englöf Ytterström"
 )
 
 if day_no and name:
@@ -29,7 +27,7 @@ class Solution(BaseSolution):
         return "Day {day}: {name}"
 
     def parse_input(self, data):
-        return data
+        return data.strip()
 
     def solve(self, puzzle_input):
         return True
