@@ -25,7 +25,9 @@ def answer(part_index, fmt_string):
         @functools.wraps(func)
         def wrapper_aoc(*args, **kwargs):
             decorate = kwargs.get("decorate", False)
-            answer = func(*args)
+            if decorate:
+                del kwargs["decorate"]
+            answer = func(*args, **kwargs)
             if not decorate:
                 print(answer)
             else:
