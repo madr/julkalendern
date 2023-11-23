@@ -1,6 +1,8 @@
 from output import answer, puzzleinput
 from collections import defaultdict
 
+from output.intcode_computer import execute
+
 n = 2
 title = "1202 Program Alarm"
 
@@ -10,41 +12,15 @@ def parse_input(data):
     return list(map(int, data.split(",")))
 
 
-@answer(1, "Value of pos 0 is {} at halt signal")
+@answer(1, "[intcode-0.1.0] Value of pos 0 is {} at halt signal")
 def part_1(program):
-    state = dict(zip(range(len(program)), program))
-    state[1] = 12
-    state[2] = 2
-
-    for i in range(0, len(state), 4):
-        opcode, *args = list(state.values())[i : i + 4]
-        if opcode == 1:
-            a, b, p = args
-            state[p] = state[a] + state[b]
-        if opcode == 2:
-            a, b, p = args
-            state[p] = state[a] * state[b]
-        if opcode == 99:
-            break
+    state, _ = execute(program, noun=12, verb=2)
     return state[0]
 
 
-@answer(2, "100 * noun + verb = {} for output 19690720")
+@answer(2, "[intcode-0.1.1] 100 * noun + verb = {} for output 19690720")
 def part_2(program, noun=76, verb=21):
-    state = dict(zip(range(len(program)), program))
-    state[1] = noun
-    state[2] = verb
-
-    for i in range(0, len(state), 4):
-        opcode, *args = list(state.values())[i : i + 4]
-        if opcode == 1:
-            a, b, p = args
-            state[p] = state[a] + state[b]
-        if opcode == 2:
-            a, b, p = args
-            state[p] = state[a] * state[b]
-        if opcode == 99:
-            break
+    state, _ = execute(program, noun, verb)
     if state[0] == 19690720:
         return 100 * noun + verb
     return state[0]
