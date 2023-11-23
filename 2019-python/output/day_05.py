@@ -1,6 +1,6 @@
 from output import answer, puzzleinput
 
-from output.intcode_computer import execute
+from output.intcode_computer import execute, parse
 
 n = 5
 title = "Sunny with a Chance of Asteroids"
@@ -8,18 +8,18 @@ title = "Sunny with a Chance of Asteroids"
 
 @puzzleinput(n)
 def parse_input(data):
-    return list(map(int, data.split(",")))
+    return parse(data)
 
 
 @answer(1, "[intcode-0.2.0] Program diagnostic code, ID 1: {}")
 def part_1(program):
-    _, stdout = execute(program, stdin=1)
+    _code, _state, _cursorpos, stdout = execute(program, stdin=1)
     return max(stdout)
 
 
 @answer(2, "[intcode-0.2.1] Program diagnostic code, ID 5: {}")
 def part_2(program):
-    _, stdout = execute(program, stdin=5)
+    _code, _state, _cursorpos, stdout = execute(program, stdin=5)
     return stdout[0]
 
 
