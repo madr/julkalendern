@@ -76,6 +76,7 @@ https://adventofcode.com/{year}/day/{day_no}/input
 
 from output import headline
 
+stars = 0
 for i in [str(n).zfill(2) for n in range(1, 26)]:
     try:
         day = __import__(
@@ -88,8 +89,13 @@ for i in [str(n).zfill(2) for n in range(1, 26)]:
         headline(day.n, day.title)
         data = day.parse_input()
         day.part_1(data, decorate=True)
+        stars += 1
         day.part_2(data, decorate=True)
+        stars += 1
     except IOError:
         pass
     except ImportError:
         pass
+print(f"\nStars: {stars}")
+print("".join("*" if n <= stars else "•" for n in range(50)))
+print("")

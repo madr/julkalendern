@@ -7,13 +7,21 @@ intcode computer, AoC 2019
 Changelog
 =========
 
+0.3.1
+-----
+
+Patch release (day 7 part 1-2).
+
+- Supports relative parameter mode
+
 0.3.0
 -----
 
 Minor release (day 7 part 1-2).
 
 BREAKING CHANGE: execute() now returns 4 values.
-- now: exit code, state at halt, instruction position at halt, and captured stdout.
+
+- now: exit code, state at halt, instruction position at halt, and captured stdout
 - before: final state, and captured stdout
 
 Changes:
@@ -63,7 +71,7 @@ Initial version (day 2 part 1).
 - Add operation 1: adds parameter 1 to parameter 2, store to parameter 3 position
 - Add operation 2: multiply parameter 1 with parameter 2, store to parameter 3 position
 """
-v = "0.2.3"
+__version__ = "0.3.1"
 
 
 def parse(data):
@@ -85,77 +93,118 @@ def execute(
         print("".join("=" for _ in title))
         print(title)
         print("".join("=" for _ in title))
-    state = dict(zip(range(len(program)), program))
+    state = defaultdict(int)
+    for k, v in zip(range(len(program)), program):
+        state[k] = v
     if noun:
         state[1] = noun
     if verb:
         state[2] = verb
     c = 0
+    rb = 0
     stdout = []
     if not isinstance(stdin, list):
         stdin = [stdin]
 
+    def halt(code):
+        return code, state, n, stdout
+
+    def values(modes, *parameters):
+        for i, v in enumerate(parameters):
+            if modes[i] == "0" and v < 0:
+                print("================ ERROR =================")
+                print("Negative index provided to position mode")
+            if modes[i] == "2" and rb + v < 0:
+                print("================ ERROR =================")
+                print("Negative index provided to relative mode")
+
+        def value(i, v):
+            if modes[i] == "1":
+                return v
+            if modes[i] == "2":
+                return state[v + rb]
+            return state[v]
+
+        if len(parameters) > 1:
+            return [value(i, v) for i, v in enumerate(parameters)]
+        return value(0, parameters[0])
+
     while True:
         instruction = state[n]
+        # if instruction > 200 and instruction < 1000:
+        # print("")
+        # spn = 2 if instruction % 100 % 3 == 0 else 4
+        # print(list(state.values())[n : n + spn])
         opcode = instruction % 100
-        modes = str(instruction // 100 % 100).zfill(2)
+        modes = str(instruction // 100).zfill(3)[::-1]
         if opcode == 1:
             a = state[n + 1]
             b = state[n + 2]
-            p = state[n + 3]
-            x = a if modes[1] == "1" else state[a]
-            y = b if modes[0] == "1" else state[b]
+            c = n + 3
+            x, y = values(modes, a, b)
+            p = state[c]
+            if modes[2] == "2":
+                p += rb
+            if debug:
+                print(f"@{str(n).zfill(4)} {opcode}_ADDITION | {x} + {y} to {p})")
             state[p] = x + y
             n += 4
-            if debug:
-                print(f"{n}:{opcode} | {x} + {y} to {p}")
         if opcode == 2:
             a = state[n + 1]
             b = state[n + 2]
-            p = state[n + 3]
-            x = a if modes[1] == "1" else state[a]
-            y = b if modes[0] == "1" else state[b]
+            c = n + 3
+            x, y = values(modes, a, b)
+            p = state[c]
+            if modes[2] == "2":
+                p += rb
+            if debug:
+                print(f"@{str(n).zfill(4)} {opcode}_MULTIPLY | {x} * {y} to {p}")
             state[p] = x * y
             n += 4
-            if debug:
-                print(f"{n}:{opcode} | {x} * {y} to {p}")
         if opcode == 3:
-            p = state[n + 1]
+            a = n + 1
+            p = state[a]
+            if modes[0] == "2":
+                p += rb
+            if debug:
+                print(
+                    f"@{str(n).zfill(4)}    {opcode}_INPUT | target={p}, queued={stdin}, interactive={interactive}"
+                )
             if stdin:
                 state[p] = stdin.pop(0)
             else:
                 if interactive:
                     state[p] = int(input("> "))
                 else:
-                    return 3, state, n, stdout
+                    if debug:
+                        print(f"@{str(n).zfill(4)} [suspended, awaiting input]")
+                    return halt(3)
             n += 2
-            if debug:
-                print(f"{n}:{opcode} | {i} to {p}")
         if opcode == 4:
             a = state[n + 1]
-            x = a if modes[1] == "1" else state[a]
-            n += 2
+            x = values(modes, a)
             stdout.append(x)
             if verbose:
                 print(x)
             if debug:
-                print(f"{n}:{opcode} | {stdout}")
+                print(f"@{str(n).zfill(4)}   {opcode}_OUTPUT | echo {x}")
+            n += 2
         if opcode == 5:
             a = state[n + 1]
             b = state[n + 2]
-            x = a if modes[1] == "1" else state[a]
-            y = b if modes[0] == "1" else state[b]
+            x, y = values(modes, a, b)
             if x != 0:
+                if debug:
+                    print(f"@{str(n).zfill(4)} {opcode}_JMP-IF-1 | {x} != 0, n={y}")
                 n = y
             else:
+                if debug:
+                    print(f"@{str(n).zfill(4)} {opcode}_JMP-IF-1 | {x} != 0, ignoring")
                 n += 3
-            if debug:
-                print(f"{n}:{opcode} | {n}")
         if opcode == 6:
             a = state[n + 1]
             b = state[n + 2]
-            x = a if modes[1] == "1" else state[a]
-            y = b if modes[0] == "1" else state[b]
+            x, y = values(modes, a, b)
             if x == 0:
                 n = y
             else:
@@ -165,30 +214,41 @@ def execute(
         if opcode == 7:
             a = state[n + 1]
             b = state[n + 2]
-            p = state[n + 3]
-            x = a if modes[1] == "1" else state[a]
-            y = b if modes[0] == "1" else state[b]
+            c = n + 3
+            x, y = values(modes, a, b)
+            p = state[c]
+            if modes[2] == "2":
+                p += rb
+            if debug:
+                print(f"@{str(n).zfill(4)} {opcode}_LESSTHAN | {x} < {y} to {p}")
             state[p] = int(x < y)
             n += 4
-            if debug:
-                print(f"{n}:{opcode} | {x}")
         if opcode == 8:
             a = state[n + 1]
             b = state[n + 2]
-            p = state[n + 3]
-            x = a if modes[1] == "1" else state[a]
-            y = b if modes[0] == "1" else state[b]
+            c = n + 3
+            x, y = values(modes, a, b)
+            p = state[c]
+            if modes[2] == "2":
+                p += rb
+            if debug:
+                print(f"@{str(n).zfill(4)}   {opcode}_EQUALS | {x} == {y} to {p}")
             state[p] = int(x == y)
             n += 4
+        if opcode == 9:
+            a = state[n + 1]
+            x = values(modes, a)
             if debug:
-                print(f"{n}:{opcode} | {x}")
+                print(f"@{str(n).zfill(4)}  {opcode}_RELBASE | {rb} + {x}")
+            rb += x
+            n += 2
         if opcode == 99:
             break
         c += 1
         if debug and c % 1000 == 0:
             print(f"{c} instructions done, current pos: {n}")
-        # if c == 3:
-        #     break
+        if c == 33:
+            break
     if verbose:
         title = f"intcode computer received SIGTERM"
-    return 99, state, n, stdout
+    return halt(99)
