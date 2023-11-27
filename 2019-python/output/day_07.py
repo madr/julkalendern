@@ -15,7 +15,7 @@ def parse_input(data):
 
 @answer(
     1,
-    "[intcode 0.3.0] Given the phase settings [0, 3, 1, 2, 4], the highest achievable signal to the thruster is {}",
+    "[intcode 0.3.0] The highest achievable signal to the thruster is {}",
 )
 def part_1(program):
     thruster_signals = []
@@ -30,7 +30,7 @@ def part_1(program):
 
 @answer(
     2,
-    "[intcode 0.3.0] Given the phase settings [7, 8, 5, 9, 6] and creating feedback loop, the highest achievable signal to the thruster is {}",
+    "[intcode 0.3.0] By creating a feedback loop, the highest achievable signal to the thruster is {}",
 )
 def part_2(program):
     thruster_signals = []

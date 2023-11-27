@@ -11,7 +11,7 @@ def parse_input(data):
     return data
 
 
-@answer(1, "the product of all 1s and 2s in the layer with fewest 0s is {}")
+@answer(1, "The product of all 1s and 2s in the layer with fewest 0s is {}")
 def part_1(data):
     layers = sorted(map(Counter, wrap(data, 25 * 6)), key=lambda c: c["0"])
     a = layers[0]["1"]

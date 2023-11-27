@@ -3,7 +3,7 @@ import sys
 year = 2019
 
 try:
-    _, day_no, name = sys.argv
+    _, day_no, *name = sys.argv
 except ValueError:
     day_no = None
     name = None
@@ -13,6 +13,7 @@ print(
 )
 
 if day_no and name:
+    name = " ".join(name)
     padded_no = day_no.zfill(2)
     print(f"\n- creating output/day_{padded_no}.py")
     with open("output/day_{}.py".format(padded_no), "w") as s:
