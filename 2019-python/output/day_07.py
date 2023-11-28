@@ -22,7 +22,7 @@ def part_1(program):
     for settings in map(list, permutations(range(5))):
         o = 0
         for ps in settings:
-            _code, _state, _n, so = execute(program, stdin=[ps, o])
+            _code, _state, _n, _rb, so = execute(program, stdin=[ps, o])
             o = so.pop(0)
         thruster_signals.append(o)
     return max(thruster_signals)
@@ -43,9 +43,9 @@ def part_2(program):
                 if paused[amp]:
                     program, resume_at = paused[amp]
                     del paused[amp]
-                    code, state, n, so = execute(program, stdin=o, n=resume_at)
+                    code, state, n, _rb, so = execute(program, stdin=o, n=resume_at)
                 else:
-                    code, state, n, so = execute(program, stdin=[ps, *o])
+                    code, state, n, _rb, so = execute(program, stdin=[ps, *o])
                 if code == 3:
                     paused[amp] = (
                         list(state.values()),

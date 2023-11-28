@@ -33,6 +33,7 @@ def answer(part_index, fmt_string):
             else:
                 formatted = fmt_string.format(answer)
                 print(f"[part {part_index}] {formatted}")
+            return answer
 
         return wrapper_aoc
 

@@ -13,13 +13,13 @@ def parse_input(data):
 
 @answer(1, "[intcode-0.2.0] Program diagnostic code, ID 1: {}")
 def part_1(program):
-    _code, _state, _cursorpos, stdout = execute(program, stdin=1)
+    _code, _state, _cursorpos, rb, stdout = execute(program, stdin=[1])
     return max(stdout)
 
 
 @answer(2, "[intcode-0.2.1] Program diagnostic code, ID 5: {}")
 def part_2(program):
-    _code, _state, _cursorpos, stdout = execute(program, stdin=5)
+    _code, _state, _cursorpos, rb, stdout = execute(program, stdin=[5])
     return stdout[0]
 
 

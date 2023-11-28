@@ -7,6 +7,15 @@ intcode computer, AoC 2019
 Changelog
 =========
 
+0.3.2
+-----
+
+Patch release (day 9 part 1-2, day 11 part 1-2).
+
+- Return relative base upon input suspension
+- Improve intcode debugger
+- Fix errorous state restoration upon resuming upon input
+
 0.3.1
 -----
 
@@ -71,7 +80,7 @@ Initial version (day 2 part 1).
 - Add operation 1: adds parameter 1 to parameter 2, store to parameter 3 position
 - Add operation 2: multiply parameter 1 with parameter 2, store to parameter 3 position
 """
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 
 def parse(data):
@@ -87,61 +96,42 @@ def execute(
     interactive=False,
     verbose=False,
     n=0,
+    rb=0,
 ):
     if verbose:
-        title = f"intcode computer, version {v}"
+        title = f"intcode computer, version {__version__}"
         print("".join("=" for _ in title))
         print(title)
         print("".join("=" for _ in title))
     state = defaultdict(int)
-    for k, v in zip(range(len(program)), program):
-        state[k] = v
+    if isinstance(program, list):
+        for k, v in zip(range(len(program)), program):
+            state[k] = v
+    else:
+        state = program.copy()
     if noun:
         state[1] = noun
     if verb:
         state[2] = verb
-    c = 0
-    rb = 0
     stdout = []
-    if not isinstance(stdin, list):
-        stdin = [stdin]
 
     def halt(code):
-        return code, state, n, stdout
+        return code, state, n, rb, stdout
 
-    def values(modes, *parameters):
-        for i, v in enumerate(parameters):
-            if modes[i] == "0" and v < 0:
-                print("================ ERROR =================")
-                print("Negative index provided to position mode")
-            if modes[i] == "2" and rb + v < 0:
-                print("================ ERROR =================")
-                print("Negative index provided to relative mode")
-
-        def value(i, v):
-            if modes[i] == "1":
-                return v
-            if modes[i] == "2":
-                return state[v + rb]
-            return state[v]
-
-        if len(parameters) > 1:
-            return [value(i, v) for i, v in enumerate(parameters)]
-        return value(0, parameters[0])
-
+    if debug and n > 0:
+        print(f"@{str(n).zfill(4)} [resuming program, stdin={stdin}]")
     while True:
         instruction = state[n]
-        # if instruction > 200 and instruction < 1000:
-        # print("")
-        # spn = 2 if instruction % 100 % 3 == 0 else 4
-        # print(list(state.values())[n : n + spn])
         opcode = instruction % 100
         modes = str(instruction // 100).zfill(3)[::-1]
+        if opcode not in (1, 2, 3, 4, 5, 6, 7, 8, 9, 99):
+            print("opcode={opcode} not implemented, halting")
+            return halt(-2)
         if opcode == 1:
             a = state[n + 1]
             b = state[n + 2]
             c = n + 3
-            x, y = values(modes, a, b)
+            x, y = _values(state, modes, rb, a, b)
             p = state[c]
             if modes[2] == "2":
                 p += rb
@@ -153,7 +143,7 @@ def execute(
             a = state[n + 1]
             b = state[n + 2]
             c = n + 3
-            x, y = values(modes, a, b)
+            x, y = _values(state, modes, rb, a, b)
             p = state[c]
             if modes[2] == "2":
                 p += rb
@@ -174,15 +164,17 @@ def execute(
                 state[p] = stdin.pop(0)
             else:
                 if interactive:
-                    state[p] = int(input("> "))
+                    manual = int(input("> "))
+                    state[p] = manual
+                    print(f"set STDIN to {manual} at pos {p}")
                 else:
                     if debug:
-                        print(f"@{str(n).zfill(4)} [suspended, awaiting input]")
+                        print(f"@{str(n).zfill(4)} [suspended, awaiting input ...]")
                     return halt(3)
             n += 2
         if opcode == 4:
             a = state[n + 1]
-            x = values(modes, a)
+            x = _values(state, modes, rb, a)
             stdout.append(x)
             if verbose:
                 print(x)
@@ -192,7 +184,7 @@ def execute(
         if opcode == 5:
             a = state[n + 1]
             b = state[n + 2]
-            x, y = values(modes, a, b)
+            x, y = _values(state, modes, rb, a, b)
             if x != 0:
                 if debug:
                     print(f"@{str(n).zfill(4)} {opcode}_JMP-IF-1 | {x} != 0, n={y}")
@@ -204,18 +196,20 @@ def execute(
         if opcode == 6:
             a = state[n + 1]
             b = state[n + 2]
-            x, y = values(modes, a, b)
+            x, y = _values(state, modes, rb, a, b)
             if x == 0:
+                if debug:
+                    print(f"@{str(n).zfill(4)} {opcode}_JMP-IF-0 | {x} == 0, n={y}")
                 n = y
             else:
+                if debug:
+                    print(f"@{str(n).zfill(4)} {opcode}_JMP-IF-0 | {x} == 0, ignoring")
                 n += 3
-            if debug:
-                print(f"{n}:{opcode} | {n}")
         if opcode == 7:
             a = state[n + 1]
             b = state[n + 2]
             c = n + 3
-            x, y = values(modes, a, b)
+            x, y = _values(state, modes, rb, a, b)
             p = state[c]
             if modes[2] == "2":
                 p += rb
@@ -227,7 +221,7 @@ def execute(
             a = state[n + 1]
             b = state[n + 2]
             c = n + 3
-            x, y = values(modes, a, b)
+            x, y = _values(state, modes, rb, a, b)
             p = state[c]
             if modes[2] == "2":
                 p += rb
@@ -237,18 +231,35 @@ def execute(
             n += 4
         if opcode == 9:
             a = state[n + 1]
-            x = values(modes, a)
+            x = _values(state, modes, rb, a)
             if debug:
                 print(f"@{str(n).zfill(4)}  {opcode}_RELBASE | {rb} + {x}")
             rb += x
             n += 2
         if opcode == 99:
-            break
-        c += 1
-        if debug and c % 1000 == 0:
-            print(f"{c} instructions done, current pos: {n}")
-        if c == 33:
-            break
-    if verbose:
-        title = f"intcode computer received SIGTERM"
-    return halt(99)
+            if debug:
+                print(f"@{str(n).zfill(4)}    {opcode}_HALT | n={n}")
+            return halt(99)
+    return halt(-1)
+
+
+def _values(state, modes, rb, *parameters):
+    # for i, v in enumerate(parameters):
+    #     if modes[i] == "0" and v < 0:
+    #         print("================ ERROR =================")
+    #         print("Negative index provided to position mode")
+    #     if modes[i] == "2" and rb + v < 0:
+    #         print("================ ERROR =================")
+    #         print("Negative index provided to relative mode")
+
+    if len(parameters) > 1:
+        return [_value(state, modes, rb, k, v) for k, v in enumerate(parameters)]
+    return _value(state, modes, rb, 0, parameters[0])
+
+
+def _value(state, modes, rb, m, s):
+    if modes[m] == "1":
+        return s
+    if modes[m] == "2":
+        return state[s + rb]
+    return state[s]
