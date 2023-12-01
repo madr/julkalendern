@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<style>
+html {
+  font-family: monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+  padding: 1em;
+  width: 50em;
+}
+
+h1, h2 {
+  font-size: 1em;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+h1::after {
+display: block;
+  content: '==========='
+}
+
+h2::after {
+display: block;
+  content: '------'
+}
+
+h3 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+h3::after {
+  content: ':'
+}
+
+ul, ol {
+  list-style: none;
+}
+
+table {
+  display: inline-block;
+}
+
+th {
+  text-align: left;
+  font-weight: normal;
+}
+
+th::after {
+  display: block;
+  content: "----------------------"
+}
+
+th + th::after {
+  content: "-------------"
+}
+
+th + th + th::after {
+  content: "--------"
+}
+</style>
+<h1>Leaderboard</h1>
+<table>
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Local score</th>
+    <th>Stars</th>
+  </tr>
+</thead>
+{% for local_score, stars, name in leaderboard %}
+  <tr>
+    <td>{{ name }}</td>
+    <td>{{ local_score }}</td>
+    <td>{{ stars }}</td>
+  </tr>
+{% endfor %}
+</table>
+
+<h2>Events</h2>
+
+{% for day, item in timeline %}
+  <h3>Day {{ day }}</h3>
+  <ol>
+    {% for ts, day, star, name, points in item %}
+      <li>
+        {% if star == '2' %}
+          {{ ts }} - {{ name }} finished
+        {% else %}
+          {{ ts }} - {{ name }} solved part 1
+        {% endif %}
+        and got {{ points }} points!
+      </li>
+    {% endfor %}
+  </ol>
+{% endfor %}
