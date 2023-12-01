@@ -1,4 +1,0 @@
-pip install flask
-mkdir templates
-mv main.jinja2 templates/
-AOC_TOKEN=<adventofcode.com session cookie> FLASK_APP=app flask run

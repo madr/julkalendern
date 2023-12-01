@@ -32,9 +32,9 @@ def get_data(token, calendar, leaderboard, dummy_data=True):
 def hello_world():
     calendar = request.args.get("calendar", datetime.now().year)
     leaderboard = request.args.get("board")
-    token = request.args.get("token")
+    token = os.environ.get("AOC_TOKEN")
     if not token:
-        return "Missing token get parameter. Use the session cookie on adventofcode.com"
+        return "Missing AOC_TOKEN environment variable. Use the session cookie on adventofcode.com"
     if not leaderboard:
         return "Missing board get parameter."
     data = get_data(token, calendar, leaderboard, False)
