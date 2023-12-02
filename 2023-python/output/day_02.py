@@ -1,3 +1,5 @@
+import re
+from math import prod
 from output import answer, puzzleinput
 from collections import defaultdict
 
@@ -7,45 +9,33 @@ title = "Cube Conundrum"
 
 @answer(1, "Sum of all possible game IDs: {}")
 def part_1(data):
-    ids = []
-    for id, game in enumerate(data.splitlines()):
-        possible = True
-        for round in game.split(";"):
-            for cubes in round.split(","):
-                if cubes.startswith("Game "):
-                    _, cubes = cubes.split(": ")
-                n, c = cubes.split()
-                n = int(n)
-                if c == "red" and n > 12:
-                    possible = False
-                    break
-                if c == "green" and n > 13:
-                    possible = False
-                    break
-                if c == "blue" and n > 14:
-                    possible = False
-                    break
-        if possible:
-            ids.append(id + 1)
-
-    return sum(ids)
+    return sum(
+        [
+            id + 1
+            for id, game in enumerate(data.splitlines())
+            if not sum(
+                any(
+                    [
+                        c == "red" and int(n) > 12,
+                        c == "green" and int(n) > 13,
+                        c == "blue" and int(n) > 14,
+                    ]
+                )
+                for n, c in re.findall(r"(\d+) (\w+)", game)
+            )
+        ]
+    )
 
 
 @answer(2, "Sum of all cube set powers: {}")
 def part_2(data):
-    powers = []
-    for id, game in enumerate(data.splitlines()):
-        seen = defaultdict(set)
-        for round in game.split(";"):
-            for cubes in round.split(","):
-                if cubes.startswith("Game "):
-                    _, cubes = cubes.split(": ")
-                n, c = cubes.split()
-                n = int(n)
-                seen[c].add(n)
-        powers.append(max(seen["blue"]) * max(seen["red"]) * max(seen["green"]))
+    def power(game):
+        seen = defaultdict(int)
+        for n, c in re.findall(r"(\d+) (\w+)", game):
+            seen[c] = max([seen[c], int(n)])
+        return prod([seen["blue"], seen["red"], seen["green"]])
 
-    return sum(powers)
+    return sum(power(game) for game in data.splitlines())
 
 
 @puzzleinput(n)
