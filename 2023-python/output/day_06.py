@@ -1,4 +1,4 @@
-from math import prod
+from math import prod, sqrt, ceil, floor
 from output import answer, puzzleinput
 
 n = 6
@@ -22,19 +22,20 @@ def parse_input(data):
 
 def presolve(data):
     values = data.split()
-    d = len(values) // 2
+    l = len(values) // 2
     races = list(
         map(
-            lambda x: (int(x[0]), int(x[1])), list(zip(values[: d + 1], values[d:]))[1:]
+            lambda x: (int(x[0]), int(x[1])), list(zip(values[: l + 1], values[l:]))[1:]
         )
     )
-    p1 = prod(
-        sum(bpt * (time - bpt) > distance for bpt in range(time))
-        for time, distance in races
-    )
-    time = int("".join(values[1:d]))
-    distance = int("".join(values[d + 1 :]))
-    p2 = prod([sum(bpt * (time - bpt) > distance for bpt in range(time))])
+    p1 = prod(sum(bpt * (t - bpt) > d for bpt in range(t)) for t, d in races)
+    t = int("".join(values[1:l]))
+    d = int("".join(values[l + 1 :]))
+    # quadratic formula:
+    # https://en.wikipedia.org/wiki/Quadratic_formula
+    l = ceil((-t + sqrt(t**2 - 4 * d)) / -2)
+    h = floor((-t - sqrt(t**2 - 4 * d)) / -2)
+    p2 = h - l + 1
     return p1, p2
 
 
