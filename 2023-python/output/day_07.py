@@ -1,5 +1,4 @@
-from collections import Counter, defaultdict
-from math import prod
+from collections import Counter
 from output import answer, puzzleinput
 
 n = 7
@@ -21,33 +20,42 @@ def parse_input(data):
     return data
 
 
-def presolve(data):
-    return data
-
-
 def _solve(data):
-    bids = dict()
-    cards = defaultdict(list)
-    sc = list()
+    return sum(
+        c[-1] * i for i, c in enumerate(sorted(_hand(h) for h in data.splitlines()), 1)
+    )
 
-    for hand in data.splitlines():
-        h, b = hand.split()
-        b = int(b)
-        for o, n in [("A", "E"), ("T", "A"), ("J", "B"), ("Q", "C"), ("K", "D")]:
-            h = h.replace(o, n)
-        bids[h] = b
-        cards[_rank(h)].append(h)
 
-    n = 1
-    for g in range(7):
-        for c in sorted(cards[g]):
-            sc.append(bids[c] * n)
-            n += 1
-
-    return sum(sc)
+def _hand(hb):
+    h, b = hb.split()
+    b = int(b)
+    h = h.translate(M)
+    return (_rank(h), h, b)
 
 
 def _rank(h):
+    """
+    Rank hand 0-6, letting jokers (0) aid the highest possible hand
+
+    >>> _rank("10110")
+    6
+    >>> _rank("11110")
+    6
+    >>> _rank("12110")
+    5
+    >>> _rank("12100")
+    5
+    >>> _rank("12000")
+    5
+    >>> _rank("12120")
+    4
+    >>> _rank("12300")
+    3
+    >>> _rank("12310")
+    3
+    >>> _rank("12340")
+    1
+    """
     hc = Counter(h)
     hcv = hc.values()
     j = hc["0"]
@@ -68,17 +76,18 @@ def _rank(h):
     return 0
 
 
+M = dict(
+    [
+        (ord(o), ord(n))
+        for o, n in {"T": "A", "J": "B", "Q": "C", "K": "D", "A": "E"}.items()
+    ]
+)
+
+
 if __name__ == "__main__":
-    # missing test cases, thank you for that AoC
-    assert _rank("10110") == 6
-    assert _rank("11110") == 6
-    assert _rank("12110") == 5
-    assert _rank("12100") == 5
-    assert _rank("12000") == 5
-    assert _rank("12120") == 4
-    assert _rank("12300") == 3
-    assert _rank("12310") == 3
-    assert _rank("12340") == 1
+    import doctest
+
+    doctest.testmod()
 
     inp = parse_input()
 
