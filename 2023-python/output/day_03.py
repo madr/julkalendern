@@ -1,5 +1,5 @@
 from collections import deque
-from output import answer, puzzleinput
+from output import answer
 
 n = 3
 title = "Gear Ratios"
@@ -18,6 +18,7 @@ def part_2(presolved):
 
 
 def presolve(data):
+    data = data.split()
     adj = (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)
     w = len(data[0])
     h = len(data)
@@ -54,13 +55,12 @@ def presolve(data):
     return sum(s), sum(gr)
 
 
-@puzzleinput(n)
-def parse_input(data):
-    return data.split()
-
-
 if __name__ == "__main__":
-    parsed = presolve(parse_input())
+    with open(f"./input/03.txt", "r") as f:
+        inp = f.read().strip()
+
+    parsed = presolve(inp)
+
     a = part_1(parsed)
     b = part_2(parsed)
 

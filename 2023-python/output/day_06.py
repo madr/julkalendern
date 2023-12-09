@@ -1,5 +1,5 @@
 from math import prod, sqrt, ceil, floor
-from output import answer, puzzleinput
+from output import answer
 
 n = 6
 title = "Wait For It"
@@ -13,11 +13,6 @@ def part_1(presolved):
 @answer(2, "The product of all record times for the single long race is {}")
 def part_2(presolved):
     return presolved[1]
-
-
-@puzzleinput(n)
-def parse_input(data):
-    return data
 
 
 def presolve(data):
@@ -40,7 +35,8 @@ def presolve(data):
 
 
 if __name__ == "__main__":
-    inp = parse_input()
+    with open(f"./input/06.txt", "r") as f:
+        inp = f.read().strip()
 
     inp = presolve(inp)
 

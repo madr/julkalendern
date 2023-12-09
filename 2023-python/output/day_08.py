@@ -1,6 +1,6 @@
 import re
 from math import lcm
-from output import answer, puzzleinput
+from output import answer
 
 n = 8
 title = "Haunted Wasteland"
@@ -16,11 +16,6 @@ def part_1(presolved):
 def part_2(presolved):
     _, ghost_meet_point = presolved
     return ghost_meet_point
-
-
-@puzzleinput(n)
-def parse_input(data):
-    return data
 
 
 def presolve(data):
@@ -54,7 +49,8 @@ def presolve(data):
 
 
 if __name__ == "__main__":
-    inp = parse_input()
+    with open(f"./input/08.txt", "r") as f:
+        inp = f.read().strip()
 
     inp = presolve(inp)
 

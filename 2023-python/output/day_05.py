@@ -2,7 +2,7 @@ import re
 from itertools import repeat
 from math import inf
 from multiprocessing import Pool, freeze_support
-from output import answer, puzzleinput
+from output import answer
 
 n = 5
 title = "If You Give A Seed A Fertilizer"
@@ -22,11 +22,6 @@ def part_2(data):
     return _bruteforce(seeds, process, 8)
 
 
-@puzzleinput(n)
-def parse_input(data):
-    return data
-
-
 def _bruteforce(seeds, process, p=1):
     processes = [[tuple(map(int, line.split())) for line in step.splitlines()[1:]] for step in process]
 
@@ -38,6 +33,7 @@ def _bruteforce(seeds, process, p=1):
         parts = [(d * n + int(start), d * n + int(start) + d) for n in range(p)]
         sm += pool.starmap(_nearest, zip(parts, repeat(processes)))
     return min(sm)
+
 
 def _nearest(start_r, processes):
     a, b = start_r

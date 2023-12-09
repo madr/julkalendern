@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from output import answer, puzzleinput
+from output import answer
 
 n = 4
 title = "Scratchcards"
@@ -16,11 +16,6 @@ def part_1(presolved):
 def part_2(presolved):
     _, count = presolved
     return count
-
-
-@puzzleinput(n)
-def parse_input(data):
-    return data
 
 
 def presolve(data):
@@ -40,7 +35,9 @@ def presolve(data):
 
 
 if __name__ == "__main__":
-    inp = parse_input()
+    with open(f"./input/04.txt", "r") as f:
+        inp = f.read().strip()
+
     inp = presolve(inp)
 
     a = part_1(inp)
