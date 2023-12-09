@@ -1,0 +1,9 @@
+#!/bin/bash
+
+OUTPUT=$3/$(seq -f "%02g" $2 $2).txt
+
+curl \
+  -o $OUTPUT \
+  "https://adventofcode.com/$1/day/$2/input" \
+  --compressed \
+  -H "Cookie: session=$AOCTOKEN" \
