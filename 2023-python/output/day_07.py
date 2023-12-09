@@ -1,5 +1,5 @@
 from collections import Counter
-from output import answer, puzzleinput
+from output import answer
 
 n = 7
 title = "Camel Cards"
@@ -13,11 +13,6 @@ def part_1(data):
 @answer(2, "Including jokers, total winnings are {}")
 def part_2(data):
     return _solve(data.replace("J", "0"))
-
-
-@puzzleinput(n)
-def parse_input(data):
-    return data
 
 
 def _solve(data):
@@ -89,7 +84,8 @@ if __name__ == "__main__":
 
     doctest.testmod()
 
-    inp = parse_input()
+    with open(f"./input/07.txt", "r") as f:
+        inp = f.read().strip()
 
     a = part_1(inp)
     b = part_2(inp)

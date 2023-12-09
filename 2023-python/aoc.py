@@ -99,9 +99,8 @@ for i in [str(n).zfill(2) for n in range(1, 26)]:
                 ["n", "title", "part_1", "part_2"],
                 0,
             )
-            filepath = f"./input/{str(n).zfill(2)}.txt"
-            with open(filepath, "r") as f:
-                data = f.read()
+            with open(f"./input/{i}.txt", "r") as f:
+                data = f.read().strip()
             headline(day.n, day.title)
             try:
                 data = day.presolve(data)

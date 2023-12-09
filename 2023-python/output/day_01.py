@@ -1,5 +1,5 @@
 import re
-from output import answer, puzzleinput
+from output import answer
 
 n = 1
 title = "Trebuchet?!"
@@ -11,7 +11,7 @@ def part_1(data):
         s = [int(c) for c in s if c.isdigit()]
         return s[0] * 10 + s[-1]
 
-    return sum(value(line) for line in data)
+    return sum(value(line) for line in data.split())
 
 
 @answer(2, "Calibration values sum: {}, including spelled out digits")
@@ -37,19 +37,15 @@ def part_2(data):
         ]
         return s[0] * 10 + s[-1]
 
-    return sum(value(line) for line in data)
-
-
-@puzzleinput(n)
-def parse_input(data):
-    return data.split()
+    return sum(value(line) for line in data.split())
 
 
 if __name__ == "__main__":
-    parsed = parse_input()
+    with open(f"./input/01.txt", "r") as f:
+        inp = f.read().strip()
 
-    a = part_1(parsed)
-    b = part_2(parsed)
+    a = part_1(inp)
+    b = part_2(inp)
 
     assert a == 54634
     assert b == 53855

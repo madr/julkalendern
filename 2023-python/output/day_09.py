@@ -1,4 +1,4 @@
-from output import answer, puzzleinput
+from output import answer
 
 n = 9
 title = "Mirage Maintenance"
@@ -30,7 +30,8 @@ def _solve(lines):
 
 
 if __name__ == "__main__":
-    inp = parse_input()
+    with open(f"./input/09.txt", "r") as f:
+        inp = f.read().strip()
 
     a = part_1(inp)
     b = part_2(inp)

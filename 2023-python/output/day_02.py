@@ -1,7 +1,7 @@
 import re
 from math import prod
-from output import answer, puzzleinput
 from collections import defaultdict
+from output import answer
 
 n = 2
 title = "Cube Conundrum"
@@ -38,16 +38,12 @@ def part_2(data):
     return sum(power(game) for game in data.splitlines())
 
 
-@puzzleinput(n)
-def parse_input(data):
-    return data
-
-
 if __name__ == "__main__":
-    parsed = parse_input()
+    with open(f"./input/02.txt", "r") as f:
+        inp = f.read().strip()
 
-    a = part_1(parsed)
-    b = part_2(parsed)
+    a = part_1(inp)
+    b = part_2(inp)
 
     assert a == 2439
     assert b == 63711
