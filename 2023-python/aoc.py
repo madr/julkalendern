@@ -56,8 +56,8 @@ if __name__ == "__main__":
     # import sys; inp = sys.stdin.read().strip()
 
     # uncomment to use AoC provided puzzle input
-    # with open(f"./input/{padded_no}.txt", "r") as f:
-    #     inp = f.read()
+    # with open("./input/{padded_no}.txt", "r") as f:
+    #     inp = f.read().strip()
 
     # uncomment to do initial data processing shared by part 1-2
     inp = solve(inp)

@@ -27,7 +27,7 @@ def presolve(data):
         b = set(re.findall(r"\d+", b))
         ab = len(a & b)
         if ab > 0:
-            scores.append(2**(ab - 1))
+            scores.append(2 ** (ab - 1))
         count[cid] += 1
         for i in range(cid + 1, cid + ab + 1):
             count[i] += count[cid]
@@ -35,7 +35,7 @@ def presolve(data):
 
 
 if __name__ == "__main__":
-    with open(f"./input/04.txt", "r") as f:
+    with open("./input/04.txt", "r") as f:
         inp = f.read().strip()
 
     inp = presolve(inp)

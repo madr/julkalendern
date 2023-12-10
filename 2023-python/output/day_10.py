@@ -1,5 +1,4 @@
-import re
-from collections import Counter, defaultdict, deque
+from collections import deque
 from output import answer
 
 n = 10
@@ -26,12 +25,12 @@ A = {
 }
 
 
-@answer(1, "Answer is {}")
+@answer(1, "Farthest away pipe is at {}")
 def part_1(presolved):
     return presolved[0]
 
 
-@answer(2, "Actually, answer is {}")
+@answer(2, "{} spots are encapsulated by pipes")
 def part_2(presolved):
     return presolved[1]
 
@@ -83,7 +82,7 @@ def presolve(data):
 
 
 if __name__ == "__main__":
-    with open(f"./input/10.txt", "r") as f:
+    with open("./input/10.txt", "r") as f:
         inp = f.read()
 
     inp = presolve(inp)

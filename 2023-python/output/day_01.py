@@ -41,7 +41,7 @@ def part_2(data):
 
 
 if __name__ == "__main__":
-    with open(f"./input/01.txt", "r") as f:
+    with open("./input/01.txt", "r") as f:
         inp = f.read().strip()
 
     a = part_1(inp)
