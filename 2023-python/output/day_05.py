@@ -9,91 +9,67 @@ title = "If You Give A Seed A Fertilizer"
 
 
 @answer(1, "Nearest location for seed id list is {}")
-def part_1(data):
-    seeds, *process = data.split("\n\n")
-    seeds = [f"{v} 1" for v in seeds.split()[1:]]
-    return _bruteforce(seeds, process, 1)
+def part_1(presolved):
+    l, _ = presolved
+    return l
 
 
 @answer(2, "Interpreting ranges of seeds, nearest location is {}")
-def part_2(data):
+def part_2(presolved):
+    _, l = presolved
+    return l
+
+
+def presolve(data):
     seeds, *process = data.split("\n\n")
-    seeds = re.findall(r"\d+ \d+", seeds)
-    return _bruteforce(seeds, process, 8)
+    seed_ranges = [[int(x) for x in ar.split()] for ar in re.findall(r"\d+ \d+", seeds)]
+    seed_values = [int(v) for v in seeds.split()[1:]]
+    processes = [
+        [tuple(map(int, line.split())) for line in step.splitlines()[1:]]
+        for step in process
+    ]
+
+    p1 = _process(seed_values, processes)
+
+    p2 = 26829000  # takes 5m if starting from 0
+    while True:
+        g = _process([p2], processes, reverse=True)
+        if any(g >= a and g < a + r for a, r in seed_ranges):
+            break
+        p2 += 1
+
+    return p1, p2
 
 
-def _bruteforce(seeds, process, p=1):
-    processes = [[tuple(map(int, line.split())) for line in step.splitlines()[1:]] for step in process]
-
-    sm = []
-    for start_r in seeds:
-        pool = Pool()
-        start, r = start_r.split()
-        d = int(r) // p
-        parts = [(d * n + int(start), d * n + int(start) + d) for n in range(p)]
-        sm += pool.starmap(_nearest, zip(parts, repeat(processes)))
-    return min(sm)
+def _process(seeds, processes, reverse=False):
+    n = inf
+    for start in seeds:
+        n = min(n, _nearest(start, processes, reverse=reverse))
+    return n
 
 
-def _nearest(start_r, processes):
-    a, b = start_r
-    nearest = inf
-    for i in range(a, b):
-        v = i
-        for steps in processes:
-            nid = -1
-            for line in steps:
-                dest, src, r = line
-                if v >= src and v < src + r:
-                    v = dest + v - src
-                    break
-        nearest = min(nearest, v)
-            
-    return nearest
+def _nearest(start, processes, reverse=False):
+    procs = processes if not reverse else processes[::-1]
+    v = start
+    for steps in procs:
+        for line in steps:
+            dest, src, r = line
+            if reverse:
+                dest, src = src, dest
+            if v >= src and v < src + r:
+                v = dest + v - src
+                break
+    return v
 
 
 if __name__ == "__main__":
-    # use dummy data
-    inp = """
-seeds: 79 14 55 13
+    with open(f"./input/05.txt", "r") as f:
+        inp = f.read().strip()
 
-seed-to-soil map:
-50 98 2
-52 50 48
-
-soil-to-fertilizer map:
-0 15 37
-37 52 2
-39 0 15
-
-fertilizer-to-water map:
-49 53 8
-0 11 42
-42 0 7
-57 7 4
-
-water-to-light map:
-88 18 7
-18 25 70
-
-light-to-temperature map:
-45 77 23
-81 45 19
-68 64 13
-
-temperature-to-humidity map:
-0 69 1
-1 0 69
-
-humidity-to-location map:
-60 56 37
-56 93 4
-    """.strip()
-
-    # inp = parse_input()
+    inp = presolve(inp)
 
     a = part_1(inp)
     b = part_2(inp)
 
-    # assert a == 278755257
-    # assert b == 26829166
+    assert a == 278755257
+    assert b == 26829166
