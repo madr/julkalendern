@@ -1,7 +1,5 @@
 import re
-from itertools import repeat
 from math import inf
-from multiprocessing import Pool, freeze_support
 from output import answer
 
 n = 5
@@ -63,7 +61,7 @@ def _nearest(start, processes, reverse=False):
 
 
 if __name__ == "__main__":
-    with open(f"./input/05.txt", "r") as f:
+    with open("./input/05.txt", "r") as f:
         inp = f.read().strip()
 
     inp = presolve(inp)

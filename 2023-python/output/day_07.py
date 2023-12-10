@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     doctest.testmod()
 
-    with open(f"./input/07.txt", "r") as f:
+    with open("./input/07.txt", "r") as f:
         inp = f.read().strip()
 
     a = part_1(inp)

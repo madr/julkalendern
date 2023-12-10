@@ -30,7 +30,7 @@ def _solve(lines):
 
 
 if __name__ == "__main__":
-    with open(f"./input/09.txt", "r") as f:
+    with open("./input/09.txt", "r") as f:
         inp = f.read().strip()
 
     a = part_1(inp)

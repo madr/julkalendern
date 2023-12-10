@@ -36,3 +36,7 @@ Execute separate puzzle on file save (replace `XX` with the puzzle number):
 
 (requires `entr` and `wl-paste`, Mac users can instead use `pbpaste`. If you
 prefer X at Linux, use `xclip -selection clipboard -o`).
+
+To lint files:
+
+    ls output/*.py | entr -r -c flake8 output --ignore=E741,E501,E203

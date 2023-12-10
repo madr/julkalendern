@@ -56,7 +56,7 @@ def presolve(data):
 
 
 if __name__ == "__main__":
-    with open(f"./input/03.txt", "r") as f:
+    with open("./input/03.txt", "r") as f:
         inp = f.read().strip()
 
     parsed = presolve(inp)
