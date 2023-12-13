@@ -21,7 +21,7 @@ class Solution(BaseSolution):
     input_file = "16.txt"
 
     def __str__(self):
-        return "Day 16: fixme"
+        return "Day 16: Aunt Sue"
 
     def parse_input(self, data):
         return data.strip()

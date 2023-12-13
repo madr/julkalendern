@@ -1,4 +1,5 @@
 import re
+
 from solutions import BaseSolution
 
 
@@ -20,8 +21,8 @@ class Solution(BaseSolution):
 
     def solve_again(self, puzzle_input):
         def lendiff(line):
-            encoded = f'"{line.replace("\\", "\\\\").replace('"', '\\"')}"'
-            return len(encoded) - len(line)
+            encoded = line.replace("\\", "\\\\").replace('"', '\\"')
+            return len(encoded) + 2 - len(line)
 
         return sum(map(lendiff, puzzle_input))
 
