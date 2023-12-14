@@ -7,6 +7,13 @@ intcode computer, AoC 2019
 Changelog
 =========
 
+0.3.3
+-----
+
+Patch release (no specific day)
+
+- Deprecating noun and verb. Those are now up to consumer to provide.
+
 0.3.2
 -----
 
@@ -80,7 +87,7 @@ Initial version (day 2 part 1).
 - Add operation 1: adds parameter 1 to parameter 2, store to parameter 3 position
 - Add operation 2: multiply parameter 1 with parameter 2, store to parameter 3 position
 """
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
 
 def parse(data):
@@ -89,8 +96,6 @@ def parse(data):
 
 def execute(
     program,
-    noun=None,
-    verb=None,
     stdin=[],
     debug=False,
     interactive=False,
@@ -109,10 +114,6 @@ def execute(
             state[k] = v
     else:
         state = program.copy()
-    if noun:
-        state[1] = noun
-    if verb:
-        state[2] = verb
     stdout = []
 
     def halt(code):
