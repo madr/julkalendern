@@ -52,11 +52,6 @@ def answer(part_index, fmt_string):
     return decorator_aoc
 
 
-def headline(n, title):
-    """Print day number and name, followed by a ruler. Used by the answer decorator"""
-    print(f"\n--- Day {n}: {title} ---\n")
-
-
 def ints(s):
     """Extract all integers from a string"""
     return [int(n) for n in re.findall(r"\d+", s)]

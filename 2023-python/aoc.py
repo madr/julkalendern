@@ -1,6 +1,11 @@
-from output import headline
 import os
 import sys
+
+
+def headline(n, title):
+    """Print day number and name, followed by a ruler. Used by the answer decorator"""
+    print(f"\n--- Day {n}: {title} ---\n")
+
 
 year = 2023
 
