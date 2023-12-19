@@ -1,5 +1,7 @@
+import sys
 from collections import defaultdict
 
+sys.set_int_max_str_digits(999_999)
 
 """
 intcode computer, AoC 2019
@@ -91,7 +93,7 @@ __version__ = "0.3.3"
 
 
 def parse(data):
-    return list(map(int, data.split(",")))
+    return [int(s) for s in data.split(",")]
 
 
 def execute(

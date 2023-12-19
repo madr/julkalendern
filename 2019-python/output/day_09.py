@@ -1,25 +1,27 @@
-from output import answer, puzzleinput
+from output import answer
 from output.intcode_computer import execute, parse
 
 n = 9
 title = "Sensor Boost"
 
 
-@puzzleinput(n)
-def parse_input(data):
-    return parse(data)
-
-
 @answer(1, "[intcode 0.3.1] BOOST keycode: {}")
-def part_1(program):
-    _c, _s, _n, _rb, outputs = execute(program, stdin=[1])
-    return outputs.pop(0)
+def part_1(o):
+    return o[0]
 
 
 @answer(2, "[intcode 0.3.1] Distress signal coordinates: {}")
-def part_2(program):
-    _c, _s, _n, _rb, outputs = execute(program, stdin=[2])
-    return outputs.pop(0)
+def part_2(o):
+    return o[1]
+
+
+def solve(data):
+    program = parse(data)
+    p12 = []
+    for inp in [1, 2]:
+        _c, _s, _n, _rb, outputs = execute(program, stdin=[inp])
+        p12.append(outputs.pop(0))
+    return p12
 
 
 if __name__ == "__main__":
@@ -72,8 +74,13 @@ if __name__ == "__main__":
     assert execute([109, 1, 203, 2, 204, 2, 99], stdin=[666])[4][0] == 666
     assert execute([109, 6, 21001, 9, 25, 1, 104, 0, 99, 49])[4][0] == 74
 
-    parsed = parse_input()
-    assert execute(parsed, stdin=[1])[4][0] == 2351176124
+    with open("./input/09.txt", "r") as f:
+        inp = f.read().strip()
 
-    part_1(parsed)
-    part_2(parsed)
+    inp = solve(inp)
+
+    a = part_1(inp)
+    b = part_2(inp)
+
+    assert a == 2351176124
+    assert b == 73110

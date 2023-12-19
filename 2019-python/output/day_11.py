@@ -1,14 +1,10 @@
 from collections import defaultdict
+
+from output import answer
 from output.intcode_computer import execute, parse
-from output import answer, puzzleinput
 
 n = 11
 title = "Space Police"
-
-
-@puzzleinput(n)
-def parse_input(data):
-    return parse(data)
 
 
 DIRS = [
@@ -26,18 +22,28 @@ TL = ["RIGHT", "LEFT"]
 
 
 @answer(1, "[intcode 0.3.2] Robot paints {} panes at least once")
-def part_1(program):
-    path, pos, d = _paint(program)
-    return len(path)
+def part_1(o):
+    return o[0]
 
 
 @answer(
     2,
-    '[intcode 0.3.2] The hull has registration identifier "JZPJRAGJ" freshly painted, see below: \n\n{}',
+    '[intcode 0.3.2] The hull has registration identifier "{}" freshly painted, see above',
 )
-def part_2(program):
+def part_2(o):
+    return o[1]
+
+
+def solve(data):
+    program = parse(data)
+    path, pos, d = _paint(program)
+    p1 = len(path)
+
     path, pos, d = _paint(program, 1)
-    return _inspect(path.copy(), pos, d)
+    print(_inspect(path.copy(), pos, d))
+    p2 = "JZPJRAGJ"
+
+    return p1, p2
 
 
 def _paint(program, initial=0):
@@ -77,6 +83,13 @@ def _inspect(path, p, d):
 
 
 if __name__ == "__main__":
-    parsed = parse_input()
-    part_1(parsed)
-    part_2(parsed)  # JZPJRAGJ
+    with open("./input/11.txt", "r") as f:
+        inp = f.read().strip()
+
+    inp = solve(inp)
+
+    a = part_1(inp)
+    b = part_2(inp)
+
+    assert a == 2720
+    assert b == "JZPJRAGJ"

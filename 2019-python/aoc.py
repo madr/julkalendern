@@ -1,4 +1,11 @@
+import os
 import sys
+
+
+def headline(n, title):
+    """Print day number and name, followed by a ruler. Used by the answer decorator"""
+    print(f"\n--- Day {n}: {title} ---\n")
+
 
 year = 2019
 
@@ -19,48 +26,54 @@ if day_no and name:
     with open("output/day_{}.py".format(padded_no), "w") as s:
         s.write(
             f"""
-from output import answer, puzzleinput
+from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
 
 n = {day_no}
 title = "{name}"
 
 
-@puzzleinput(n)
-def parse_input(data):
-    return data
-
-
 @answer(1, "Answer is {{}}")
-def part_1(data):
-    return data
+def part_1(outputs):
+    return outputs[0]
 
 
 @answer(2, "Actually, answer is {{}}")
-def part_2(data):
-    return data
+def part_2(outputs):
+    return outputs[1]
+
+
+def solve(data):
+    return None, None
 
 
 if __name__ == "__main__":
     # use dummy data
-    parsed = \"\"\"
+    inp = \"\"\"
         replace me
     \"\"\".strip()
 
     # uncomment to instead use stdin
-    # import fileinput
-    # parsed = "\\n".join(list(fileinput.input()))
+    # import sys; inp = sys.stdin.read().strip()
 
-    # uncomment to instead use content of input/{padded_no}.txt
-    # parsed = parse_input()
+    # uncomment to use AoC provided puzzle input
+    # with open("./input/{padded_no}.txt", "r") as f:
+    #     inp = f.read().strip()
 
-    part_1(parsed)
-    # part_2(parsed)
+    inp = solve(inp)
+
+    a = part_1(inp)
+    # b = part_2(inp)
+
+    # uncomment and replace 0 with actual output to refactor code
+    # and ensure nonbreaking changes
+    # assert a == 0
+    # assert b == 0
 """.strip()
             + "\n"
         )
-    print(f"- creating empty input/{day_no.zfill(2)}.txt")
-    with open("input/{}.txt".format(day_no.zfill(2)), "w") as i:
-        i.write("")
+    print("- making sure input dir exists")
+    if not os.path.exists("input"):
+        os.makedirs("input")
 
     print(
         f"""
@@ -75,28 +88,34 @@ https://adventofcode.com/{year}/day/{day_no}/input
     )
     exit(0)
 
-from output import headline
 
 stars = 0
 for i in [str(n).zfill(2) for n in range(1, 26)]:
-    try:
-        day = __import__(
-            "output.day_{}".format(i),
-            globals(),
-            locals(),
-            ["n", "title", "part_1", "part_2", "parse_input"],
-            0,
-        )
-        headline(day.n, day.title)
-        data = day.parse_input()
-        day.part_1(data, decorate=True)
-        stars += 1
-        day.part_2(data, decorate=True)
-        stars += 1
-    except IOError:
-        pass
-    except ImportError:
-        pass
-print(f"\nStars: {stars}")
-print("".join("*" if n <= stars else "•" for n in range(50)))
+    if not day_no or day_no.zfill(2) == i:
+        try:
+            day = __import__(
+                "output.day_{}".format(i),
+                globals(),
+                locals(),
+                ["n", "title", "part_1", "part_2", "solve"],
+                0,
+            )
+            with open(f"./input/{i}.txt", "r") as f:
+                data = f.read().strip()
+            headline(day.n, day.title)
+            try:
+                data = day.solve(data)
+            except AttributeError:
+                pass
+            if day.part_1(data, decorate=True):
+                stars += 1
+            if day.part_2(data, decorate=True):
+                stars += 1
+        except IOError:
+            pass
+        except ImportError:
+            pass
+if not day_no:
+    print(f"\nStars: {stars}")
+    print("".join("*" if n < stars else "•" for n in range(50)))
 print("")

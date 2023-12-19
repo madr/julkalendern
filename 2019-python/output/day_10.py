@@ -1,28 +1,31 @@
 from collections import OrderedDict, defaultdict, deque
 from math import atan2
-from output import answer, puzzleinput
+
+from output import answer
 
 n = 10
 title = "Monitoring Station"
 
 
-@puzzleinput(n)
-def parse_input(data):
-    return data.strip().split()
-
-
 @answer(1, "The monitor station will see {} asteroids at best")
-def part_1(matrix):
-    _pos, visible = _map_visible_asteroids(matrix)
-    return len(set(dict(visible).values()))
+def part_1(o):
+    return o[0]
 
 
 @answer(
     2,
     "The asteroid at y=3 x=17 (checksum {}) will be the 200th lazer vapored asteroid, making some elf happy",
 )
-def part_2(matrix):
+def part_2(o):
+    return o[1]
+
+
+def solve(data):
+    matrix = data.strip().split()
     pos, visible = _map_visible_asteroids(matrix)
+
+    p1 = len(set(dict(visible).values()))
+
     targets_upper = defaultdict(list)
     targets_lower = defaultdict(list)
     targets = dict()
@@ -58,7 +61,10 @@ def part_2(matrix):
                     break
         if not popped:
             break
-    return x * 100 + y
+
+    p2 = x * 100 + y
+
+    return p1, p2
 
 
 def _map_visible_asteroids(matrix):
@@ -78,6 +84,13 @@ def _map_visible_asteroids(matrix):
 
 
 if __name__ == "__main__":
-    parsed = parse_input()
-    part_1(parsed)
-    part_2(parsed)
+    with open("./input/10.txt", "r") as f:
+        inp = f.read().strip()
+
+    inp = solve(inp)
+
+    a = part_1(inp)
+    b = part_2(inp)
+
+    assert a == 292
+    assert b == 317

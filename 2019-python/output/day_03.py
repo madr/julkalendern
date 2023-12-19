@@ -1,5 +1,6 @@
 from collections import defaultdict
-from output import answer, puzzleinput
+
+from output import answer
 
 n = 3
 title = "Crossed Wires"
@@ -12,37 +13,24 @@ directions = {
 }
 
 
-@puzzleinput(n)
-def parse_input(data):
-    return [line.split(",") for line in data.split()]
-
-
 @answer(
     1, "As the crow flies, closest intersection Manhattan distance is {} units away"
 )
-def part_1(wires):
-    def follow(instructions):
-        seen = []
-        pos = (0, 0)
-        for instruction in instructions:
-            urdl, *l = instruction
-            distance = int("".join(l))
-            for _ in range(distance):
-                pos = (pos[0] + directions[urdl][0], pos[1] + directions[urdl][1])
-                seen.append(pos)
-        return set(seen)
-
-    wa = follow(wires[0])
-    wb = follow(wires[1])
-
-    return min(sum(map(abs, i)) for i in wa & wb)
+def part_1(o):
+    return o[0]
 
 
 @answer(2, "By travel, closest intersection Manhattan distance is {} units away")
-def part_2(wires):
+def part_2(o):
+    return o[1]
+
+
+def solve(inp):
+    wires = [line.split(",") for line in inp.split()]
     seen = defaultdict(dict)
 
     def follow(instructions, i):
+        visited = []
         steps = 0
         pos = (0, 0)
         for instruction in instructions:
@@ -51,16 +39,29 @@ def part_2(wires):
             for _ in range(distance):
                 steps += 1
                 pos = (pos[0] + directions[urdl][0], pos[1] + directions[urdl][1])
+                visited.append(pos)
                 if i not in seen[pos]:
                     seen[pos][i] = steps
+        return set(visited)
 
+    p1w = []
     for i, wire in enumerate(wires):
-        follow(wire, i)
+        p1w.append(follow(wire, i))
+    p1 = min(sum(map(abs, i)) for i in p1w[0] & p1w[1])
 
-    return min(sum(v.values()) for v in seen.values() if len(v) > 1)
+    p2 = min(sum(v.values()) for v in seen.values() if len(v) > 1)
+
+    return p1, p2
 
 
 if __name__ == "__main__":
-    parsed = parse_input()
-    part_1(parsed)
-    part_2(parsed)
+    with open("./input/03.txt", "r") as f:
+        inp = f.read().strip()
+
+    inp = solve(inp)
+
+    a = part_1(inp)
+    b = part_2(inp)
+
+    assert a == 1337
+    assert b == 65356
