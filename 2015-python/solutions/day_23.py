@@ -53,13 +53,3 @@ class Solution(BaseSolution):
 if __name__ == "__main__":
     solution = Solution()
     solution.show_results()
-
-    dummy = """
-inc a
-jio a, +2
-tpl a
-inc a
-""".strip()
-
-    # solution.solve(dummy)
-    # solution.solve_again(dummy)

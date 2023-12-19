@@ -1,7 +1,7 @@
-from collections import defaultdict
-from solutions import BaseSolution
 import re
-from random import shuffle, choice
+from random import shuffle
+
+from solutions import BaseSolution
 
 
 class Solution(BaseSolution):

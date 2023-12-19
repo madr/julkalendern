@@ -41,10 +41,3 @@ class Solution(BaseSolution):
 if __name__ == "__main__":
     solution = Solution()
     solution.show_results()
-
-    dummy = """
-    1,2,3,4,5,7,8,9,10,11
-    """.strip()
-
-    solution.solve(dummy)
-    # solution.solve_again(dummy)

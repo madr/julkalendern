@@ -1,6 +1,7 @@
 import re
-from solutions import BaseSolution
 from collections import defaultdict
+
+from solutions import BaseSolution
 
 
 class Solution(BaseSolution):
@@ -26,6 +27,8 @@ class Solution(BaseSolution):
                             m[(r, c)] = True
                         case "turn off":
                             m[(r, c)] = False
+        p1 = sum(m.values())
+        assert p1 == 569999
         return sum(m.values())
 
     def solve_again(self, puzzle_input):
@@ -42,7 +45,9 @@ class Solution(BaseSolution):
                             m[(r, c)] += 1
                         case "turn off":
                             m[(r, c)] = max(m[(r, c)] - 1, 0)
-        return sum(m.values())
+        p2 = sum(m.values())
+        assert p2 == 17836115
+        return p2
 
 
 if __name__ == "__main__":

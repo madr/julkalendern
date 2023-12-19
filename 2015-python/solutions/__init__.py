@@ -23,10 +23,10 @@ class BaseSolution:
         )
 
     def solve(self, puzzle_input):
-        raise NotImplemented
+        raise NotImplementedError
 
     def solve_again(self, puzzle_input):
-        raise NotImplemented
+        raise NotImplementedError
 
     def parse_input(self, data):
-        raise NotImplemented
+        raise NotImplementedError
