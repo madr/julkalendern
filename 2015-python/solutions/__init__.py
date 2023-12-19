@@ -14,9 +14,8 @@ class BaseSolution:
         data = self.read_input(self.input_file)
         puzzle_input = self.parse_input(data)
         print(
-            "\n\n{}\n{}\n\nPart 1: {}\nPart 2: {}".format(
+            "\n--- {} ---\n 1. {}\n 2. {}".format(
                 str(self),
-                "-" * len(str(self)),
                 self.solve(puzzle_input),
                 self.solve_again(puzzle_input),
             )

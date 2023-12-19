@@ -46,7 +46,9 @@ if __name__ == "__main__":
 
     solution.solve(dummy)
     # solution.solve_again(dummy)
-""".strip().format(day=day_no, day_no=day_no.zfill(2), name=name)
+""".strip().format(
+                day=day_no, day_no=day_no.zfill(2), name=name
+            )
             + "\n"
         )
 
@@ -63,13 +65,18 @@ https://adventofcode.com/{year}/day/{day_no}/input
     )
     exit(0)
 
+stars = 0
 for i in [str(n).zfill(2) for n in range(1, 26)]:
     try:
         solution = __import__(
             "solutions.day_{}".format(i), globals(), locals(), ["Solution"], 0
         ).Solution()
         solution.show_results()
+        stars += 2
     except IOError:
         pass
     except ImportError:
         pass
+print(f"\nStars: {stars}")
+print("".join("*" if n < stars else "•" for n in range(50)))
+print("")
