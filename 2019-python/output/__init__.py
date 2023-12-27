@@ -54,7 +54,7 @@ def answer(part_index, fmt_string):
 
 def ints(s):
     """Extract all integers from a string"""
-    return [int(n) for n in re.findall(r"\d+", s)]
+    return [int(n) for n in re.findall(r"-?\d+", s)]
 
 
 def mhd(a, b):
