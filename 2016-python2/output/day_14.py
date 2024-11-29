@@ -2,21 +2,6 @@ import functools
 import re
 from hashlib import md5
 
-from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
-
-n = 14
-title = "One-Time Pad"
-
-
-@answer(1, "64th key is at index {}")
-def part_1(presolved):
-    return presolved[0]
-
-
-@answer(2, "64th key is at index {} using key stretching")
-def part_2(presolved):
-    return presolved[1]
-
 
 def solve(s):
     p1 = run(s)
@@ -66,10 +51,7 @@ if __name__ == "__main__":
     with open("./input/14.txt", "r") as f:
         inp = f.read().strip()
 
-    inp = solve(inp)
+    p1, p2 = solve(inp)
 
-    a = part_1(inp)
-    b = part_2(inp)
-
-    assert a == 18626
-    assert b == 20092
+    print(p1)
+    print(p2)

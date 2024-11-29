@@ -2,9 +2,9 @@ import sys
 from pathlib import Path
 
 
-def headline(n, title):
+def headline(n):
     """Print day number and name, followed by a ruler. Used by the answer decorator"""
-    print(f"\n--- Day {n}: {title} ---\n")
+    print(f"\n--- Day {n} ---\n")
 
 
 year = 2016
@@ -31,19 +31,6 @@ if day_no and name:
             f"""
 from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
 
-n = {day_no}
-title = "{name}"
-
-
-@answer(1, "Answer is {{}}")
-def part_1(presolved):
-    return presolved[0]
-
-
-@answer(2, "Actually, answer is {{}}")
-def part_2(presolved):
-    return presolved[1]
-
 
 def solve(data):
     return 1, 2
@@ -63,10 +50,10 @@ if __name__ == "__main__":
     #     inp = f.read().strip()
 
     # uncomment to do initial data processing shared by part 1-2
-    inp = solve(inp)
+    p1, p2 = solve(inp)
 
-    a = part_1(inp)
-    # b = part_2(inp)
+    print(p1)
+    # print(p2)
 
     # uncomment and replace 0 with actual output to refactor code
     # and ensure nonbreaking changes
@@ -97,23 +84,25 @@ for i in [str(n).zfill(2) for n in range(1, 26)]:
                 "output.day_{}".format(i),
                 globals(),
                 locals(),
-                ["n", "title", "part_1", "part_2"],
+                ["solve"],
                 0,
             )
             with open(f"./input/{i}.txt", "r") as f:
                 data = f.read().strip()
-            headline(day.n, day.title)
+            headline(i)
             try:
                 data = day.presolve(data)
             except AttributeError:
                 pass
             try:
-                data = day.solve(data)
+                p1, p2 = day.solve(data)
             except AttributeError:
                 pass
-            if day.part_1(data, decorate=True):
+            if p1:
+                print(f"    1. {p1}")
                 stars += 1
-            if day.part_2(data, decorate=True):
+            if p2:
+                print(f"    2. {p2}")
                 stars += 1
         except IOError:
             pass

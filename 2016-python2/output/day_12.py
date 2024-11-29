@@ -1,21 +1,3 @@
-from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
-
-n = 12
-title = "Leonardo's Monorail"
-
-
-@answer(1, "Value of registry a will be {} on exit")
-def part_1(presolved):
-    return presolved[0]
-
-
-@answer(
-    2, "If register c is initialized with 1, value of registry a will be {} on exit"
-)
-def part_2(presolved):
-    return presolved[1]
-
-
 def solve(data):
     p = data.splitlines()
     pl = len(p)
@@ -64,10 +46,7 @@ if __name__ == "__main__":
     with open("./input/12.txt", "r") as f:
         inp = f.read().strip()
 
-    inp = solve(inp)
+    p1, p2 = solve(inp)
 
-    a = part_1(inp)
-    b = part_2(inp)
-
-    assert a == 318009
-    assert b == 9227663
+    print(p1)
+    print(p2)

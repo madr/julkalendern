@@ -1,19 +1,3 @@
-from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
-
-n = 16
-title = "Dragon Checksum"
-
-
-@answer(1, "The checksum to the state to fill first disc is {}")
-def part_1(presolved):
-    return presolved[0]
-
-
-@answer(2, "The checksum to the state to fill second disc is {}")
-def part_2(presolved):
-    return presolved[1]
-
-
 def solve(data):
     p12 = []
     for DS in [272, 35651584]:
@@ -34,10 +18,7 @@ if __name__ == "__main__":
     with open("./input/16.txt", "r") as f:
         inp = f.read().strip()
 
-    inp = solve(inp)
+    p1, p2 = solve(inp)
 
-    a = part_1(inp)
-    b = part_2(inp)
-
-    assert a == "10011010010010010"
-    assert b == "10101011110100011"
+    print(p1)
+    print(p2)

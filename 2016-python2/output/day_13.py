@@ -1,20 +1,7 @@
 from collections import Counter
 from math import inf
 
-from output import D, answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
-
-n = 13
-title = "A Maze of Twisty Little Cubicles"
-
-
-@answer(1, "Fewest number of steps required to reach (31, 39) are {}")
-def part_1(presolved):
-    return presolved[0]
-
-
-@answer(2, "{} distinct locations can be reached by traversing at most 50 steps")
-def part_2(presolved):
-    return presolved[1]
+from output import D  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
 
 
 def solve(data, E=(31, 39)):
@@ -56,16 +43,10 @@ def valid(x, y, z):
 
 
 if __name__ == "__main__":
-    with open(f"./input/{n}.txt", "r") as f:
+    with open("./input/13.txt", "r") as f:
         inp = f.read().strip()
 
-    t, _ = solve("10", (7, 4))
-    assert t == 11
+    p1, p2 = solve(inp)
 
-    ab = solve(inp)
-
-    a = part_1(ab)
-    b = part_2(ab)
-
-    assert a == 90
-    assert b == 135
+    print(p1)
+    print(p2)
