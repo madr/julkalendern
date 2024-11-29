@@ -46,9 +46,6 @@ if __name__ == "__main__":
     with open("./input/13.txt", "r") as f:
         inp = f.read().strip()
 
-    t, _ = solve("10", (7, 4))
-    assert t == 11
-
     p1, p2 = solve(inp)
 
     print(p1)

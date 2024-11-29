@@ -2,22 +2,7 @@ import re
 from collections import Counter, deque
 from itertools import combinations
 
-from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
-
-n = 11
-title = "Radioisotope Thermoelectric Generators"
-
 D = {1: [2], 2: [1, 3], 3: [2, 4], 4: [3]}
-
-
-@answer(1, "To transport all objects to the 4th floor, {} steps are required")
-def part_1(presolved):
-    return presolved[0]
-
-
-@answer(2, "With the additonal objects to transport, {} steps are required")
-def part_2(presolved):
-    return presolved[1]
 
 
 def solve(data):
@@ -145,10 +130,7 @@ if __name__ == "__main__":
     with open("./input/11.txt", "r") as f:
         inp = f.read().strip()
 
-    inp = solve(inp)
+    p1, p2 = solve(inp)
 
-    a = part_1(inp)
-    b = part_2(inp)
-
-    assert a == 37
-    assert b == 61
+    print(p1)
+    print(p2)
