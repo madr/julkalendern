@@ -142,16 +142,6 @@ def M(s, e):
 
 
 if __name__ == "__main__":
-    # use dummy data
-    inp = """
-    The first floor contains a hydrogen-compatible microchip and a lithium-compatible microchip.
-    The second floor contains a hydrogen generator.
-    The third floor contains a lithium generator.
-    The fourth floor contains nothing relevant.
-    """.strip()
-
-    z, _ = solve(inp)
-
     with open("./input/11.txt", "r") as f:
         inp = f.read().strip()
 
@@ -160,6 +150,5 @@ if __name__ == "__main__":
     a = part_1(inp)
     b = part_2(inp)
 
-    assert z == 11
     assert a == 37
     assert b == 61
