@@ -80,3 +80,59 @@ def vdbg(seen, h, w):
     """Print-debug visited positions of a matrix"""
     for r in range(h):
         print("".join(["#" if (r, c) in seen else "." for c in range(w)]))
+
+
+"""
+1. Create an array that holds the distance of each vertex from the starting
+   vertex. Initially, set this distance to infinity for all vertices except
+   the starting vertex which should be set to 0.
+2. Create a priority queue (heap) and insert the starting vertex with its
+   distance of 0.
+3. While there are still vertices left in the priority queue, select the vertex
+   with the smallest recorded distance from the starting vertex and visit its
+   neighboring vertices.
+4. For each neighboring vertex, check if it is visited already or not. If it
+   isn’t visited yet, calculate its tentative distance by adding its weight
+   to the smallest distance found so far for its parent/previous node
+   (starting vertex in case of first-level vertices).
+5. If this tentative distance is smaller than previously recorded value
+   (if any), update it in our ‘distances’ array.
+6. Finally, add this visited vertex with its updated distance to our priority
+   queue and repeat step-3 until we have reached our destination or exhausted
+   all nodes.
+"""
+
+
+# https://pieriantraining.com/understanding-dijkstras-algorithm-in-python/
+def dijkstra_algorithm(graph, start_node):
+    def min_distance(distances, visited):
+        min_val = float("inf")
+        min_index = -1
+
+        for i in range(len(distances)):
+            if distances[i] < min_val and i not in visited:
+                min_val = distances[i]
+                min_index = i
+
+        return min_index
+
+    num_nodes = len(graph)
+
+    distances = [float("inf")] * num_nodes
+    visited = []
+
+    distances[start_node] = 0
+
+    for i in range(num_nodes):
+        current_node = min_distance(distances, visited)
+
+        visited.append(current_node)
+
+        for j in range(num_nodes):
+            if graph[current_node][j] != 0:
+
+                new_distance = distances[current_node] + graph[current_node][j]
+
+                if new_distance < distances[j]:
+                    distances[j] = new_distance
+    return distances
