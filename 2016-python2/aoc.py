@@ -29,11 +29,18 @@ if day_no and name:
     with open("output/day_{}.py".format(padded_no), "w") as s:
         s.write(
             f"""
+import re
+from collections import deque, Counter
+from heapq import heappop, heappush
+from itertools import compress, combinations, chain
+
 from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
 
 
 def solve(data):
-    return 1, 2
+    p1 = 1
+    p2 = 2
+    return p1, p2
 
 
 if __name__ == "__main__":
@@ -57,8 +64,8 @@ if __name__ == "__main__":
 
     # uncomment and replace 0 with actual output to refactor code
     # and ensure nonbreaking changes
-    # assert a == 0
-    # assert b == 0
+    # assert p1 == 0
+    # assert p2 == 0
 """.strip()
             + "\n"
         )
