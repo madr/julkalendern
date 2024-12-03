@@ -30,28 +30,6 @@ ADJ = [
 ]
 
 
-def answer(part_index, fmt_string):
-    """Decorator to present a solution in a human readable format"""
-
-    def decorator_aoc(func):
-        @functools.wraps(func)
-        def wrapper_aoc(*args, **kwargs):
-            decorate = kwargs.get("decorate", False)
-            if decorate:
-                del kwargs["decorate"]
-            answer = func(*args, **kwargs)
-            if not decorate:
-                print(answer)
-            else:
-                formatted = fmt_string.format(answer)
-                print(f" {part_index}) {formatted}")
-            return answer
-
-        return wrapper_aoc
-
-    return decorator_aoc
-
-
 def ints(s):
     """Extract all integers from a string"""
     return [int(n) for n in re.findall(r"\d+", s)]
