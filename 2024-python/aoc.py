@@ -34,7 +34,7 @@ from collections import deque, Counter
 from heapq import heappop, heappush
 from itertools import compress, combinations, chain
 
-from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
+from output import matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
 
 
 def solve(data):
