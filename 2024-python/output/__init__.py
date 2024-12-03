@@ -127,6 +127,7 @@ def dijkstras(grid, start, target):
        all nodes.
     """
     import heapq
+
     target = max(grid)
     seen = set()
     queue = [(start, 0)]
