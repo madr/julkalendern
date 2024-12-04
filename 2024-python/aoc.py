@@ -4,7 +4,7 @@ from pathlib import Path
 
 def headline(n):
     """Print day number and name, followed by a ruler. Used by the answer decorator"""
-    print(f"\n--- Day {n} ---\n")
+    print(f"\nDay {int(n)} - https://adventofcode.com/{year}/day/{int(n)}\n")
 
 
 year = 2024
