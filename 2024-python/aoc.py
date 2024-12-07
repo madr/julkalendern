@@ -110,10 +110,10 @@ for i in [str(n).zfill(2) for n in range(1, 26)]:
             except AttributeError:
                 pass
             if p1:
-                print(f"    1. {p1}")
+                print(f"    1) {p1}")
                 stars += 1
             if p2:
-                print(f"    2. {p2}")
+                print(f"    2) {p2}")
                 stars += 1
         except IOError:
             pass
