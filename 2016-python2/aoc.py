@@ -30,11 +30,11 @@ if day_no and name:
         s.write(
             f"""
 import re
-from collections import deque, Counter
+from collections import deque, Counter, defaultdict
 from heapq import heappop, heappush
-from itertools import compress, combinations, chain
+from itertools import compress, combinations, chain, permutations
 
-from output import answer  # , matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
+from output import matrix, D, DD, ADJ, ints, mhd, mdbg, vdbg
 
 
 def solve(data):
