@@ -49,29 +49,10 @@ def travel(dests, grid, H, W, S0, goback=False):
 
 
 if __name__ == "__main__":
-    # use dummy data
-    inp = """
-    ###########
-    #0.1.....2#
-    #.#######.#
-    #4.......3#
-    ###########
-    """.strip()
-
-    # uncomment to instead use stdin
-    # import sys; inp = sys.stdin.read().strip()
-
-    # uncomment to use AoC provided puzzle input
     with open("./input/24.txt", "r") as f:
         inp = f.read().strip()
 
-    # uncomment to do initial data processing shared by part 1-2
     p1, p2 = solve(inp)
 
     print(p1)
     print(p2)
-
-    # uncomment and replace 0 with actual output to refactor code
-    # and ensure nonbreaking changes
-    # assert p1 == 0
-    # assert p2 == 0

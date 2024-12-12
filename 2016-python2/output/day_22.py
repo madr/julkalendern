@@ -1,9 +1,6 @@
-import re
-from collections import Counter, defaultdict, deque
-from heapq import heappop, heappush
-from itertools import chain, combinations, compress, permutations
+from itertools import permutations
 
-from output import ADJ, DD, D, ints, matrix, mdbg, mhd, vdbg
+from output import ints
 
 
 def solve(data):
@@ -19,14 +16,18 @@ def solve(data):
         grid[(y1, x1)] = (used, size)
         if 0 < used <= avail:
             viable.add(((y1, x1), (y2, x2)))
+        if used == 0:
+            empty = (y1, x1)
     p1 = len(viable)
     S, E = (0, W), (0, 0)
-    H, W = H + 1, W + 1
-    dagrid(grid, H, W)
+    # dagrid(grid, H + 1, W + 1)
+    y, x = empty
+    p2 = x + y + W + (W - 1) * 5
     return p1, p2
 
 
 def dagrid(grid, H, W):
+    """Used to print the grid to be solved by hand."""
     for r in range(H):
         for c in range(W):
             u, a = grid[(r, c)]
@@ -35,35 +36,10 @@ def dagrid(grid, H, W):
 
 
 if __name__ == "__main__":
-    # use dummy data
-    inp = """
-    sdsdsd
-    Filesystem            Size  Used  Avail  Use%
-    /dev/grid/node-x0-y0   10T    8T     2T   80%
-    /dev/grid/node-x0-y1   11T    6T     5T   54%
-    /dev/grid/node-x0-y2   32T   28T     4T   87%
-    /dev/grid/node-x1-y0    9T    7T     2T   77%
-    /dev/grid/node-x1-y1    8T    0T     8T    0%
-    /dev/grid/node-x1-y2   11T    7T     4T   63%
-    /dev/grid/node-x2-y0   10T    6T     4T   60%
-    /dev/grid/node-x2-y1    9T    8T     1T   88%
-    /dev/grid/node-x2-y2    9T    6T     3T   66%
-    """.strip()
-
-    # uncomment to instead use stdin
-    # import sys; inp = sys.stdin.read().strip()
-
-    # uncomment to use AoC provided puzzle input
     with open("./input/22.txt", "r") as f:
         inp = f.read().strip()
 
-    # uncomment to do initial data processing shared by part 1-2
     p1, p2 = solve(inp)
 
     print(p1)
     print(p2)
-
-    # uncomment and replace 0 with actual output to refactor code
-    # and ensure nonbreaking changes
-    # assert p1 == 0
-    # assert p2 == 0
