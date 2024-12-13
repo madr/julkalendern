@@ -25,11 +25,13 @@ def solve(data):
                 areas += 1
                 y, x = rc
                 for dy, dx in D:
-                    if (0 <= y + dy < H and 0 <= x + dx <W) and grid[y + dy][x + dx] == col:
+                    if (0 <= y + dy < H and 0 <= x + dx < W) and grid[y + dy][
+                        x + dx
+                    ] == col:
                         q.append((y + dy, x + dx))
                     else:
                         perimeters += 1
-            p1 += areas*perimeters
+            p1 += areas * perimeters
     p2 = None
     return p1, p2
 
