@@ -1,20 +1,19 @@
-import re
-from collections import Counter, defaultdict, deque
-from heapq import heappop, heappush
-from itertools import chain, combinations, compress, permutations
+from collections import deque
 
-from output import ADJ, DD, D, ccw, cw, ints, matrix, mdbg, mhd, vdbg
+from output import D, Di, cw, matrix
 
 
 def solve(data):
     grid, H, W = matrix(data)
-    p1 = 0
+    fence_cost = 0
+    fence_cost_w_discount = 0
     seen = set()
-    for r, row in enumerate(grid):
-        for c, col in enumerate(row):
+    for r in range(H):
+        for c in range(W):
             if (r, c) in seen:
                 continue
-            areas = 0
+            id = grid[r][c]
+            regions = set()
             perimeters = 0
             q = deque([(r, c)])
             while q:
@@ -22,67 +21,53 @@ def solve(data):
                 if rc in seen:
                     continue
                 seen.add(rc)
-                areas += 1
+                regions.add(rc)
                 y, x = rc
-                for dy, dx in D:
-                    if (0 <= y + dy < H and 0 <= x + dx < W) and grid[y + dy][
-                        x + dx
-                    ] == col:
-                        q.append((y + dy, x + dx))
+                for delta_y, delta_x in D:
+                    yn, xn = y + delta_y, x + delta_x
+                    if (0 <= yn < H and 0 <= xn < W) and grid[yn][xn] == id:
+                        q.append((yn, xn))
                     else:
                         perimeters += 1
-            p1 += areas * perimeters
-    p2 = None
-    return p1, p2
+            if len(regions) <= 2:
+                corners = 4
+            else:
+                corners = count_corners(regions)
+            fence_cost += len(regions) * perimeters
+            fence_cost_w_discount += len(regions) * corners
+    return fence_cost, fence_cost_w_discount
+
+
+def count_corners(region):
+    corners = 0
+    for y, x in region:
+        for delta_y, delta_x in D:
+            # convex corners: one horisontal and one vertical
+            # neighbor are not members of region
+            delta_ycw, delta_xcw = cw(delta_y, delta_x)
+            if (y + delta_y, x + delta_x) not in region and (
+                y + delta_ycw,
+                x + delta_xcw,
+            ) not in region:
+                corners += 1
+        for delta_y, delta_x in Di:
+            # concave corners: the diagonal neighbor are not
+            # member of region, but the connected horisontal
+            # and vertical neighbors are
+            if (
+                (y + delta_y, x + delta_x) not in region
+                and (y + delta_y, x) in region
+                and (y, x + delta_x) in region
+            ):
+                corners += 1
+    return corners
 
 
 if __name__ == "__main__":
-    import os
-
-    # use dummy data
-    inp = """
-    RRRRIICCFF
-    RRRRIICCCF
-    VVRRRCCFFF
-    VVRCCCJFFF
-    VVVVCJJCFE
-    VVIVCCJJEE
-    VVIIICJJEE
-    MIIIIIJJEE
-    MIIISIJEEE
-    MMMISSJEEE
-    """.strip()
-
-    """
-    A region of R plants with price 12 * 18 = 216.
-    A region of I plants with price 4 * 8 = 32.
-    A region of C plants with price 14 * 28 = 392.
-    A region of F plants with price 10 * 18 = 180.
-    A region of V plants with price 13 * 20 = 260.
-    A region of J plants with price 11 * 20 = 220.
-    A region of C plants with price 1 * 4 = 4.
-    A region of E plants with price 13 * 18 = 234.
-    A region of I plants with price 14 * 22 = 308.
-    A region of M plants with price 5 * 12 = 60.
-    A region of S plants with price 3 * 8 = 24.
-    """
-
-    # uncomment to instead use stdin
-    # import sys; inp = sys.stdin.read().strip()
-
-    # uncomment to use AoC provided puzzle input
     with open("./input/12.txt", "r") as f:
         inp = f.read().strip()
 
-    # uncomment to do initial data processing shared by part 1-2
     p1, p2 = solve(inp)
 
     print(p1)
-    os.system(f"echo {p1} | wl-copy")
-    # print(p2)
-    # os.system(f"echo {p2} | wl-copy")
-
-    # uncomment and replace 0 with actual output to refactor code
-    # and ensure nonbreaking changes
-    assert p1 == 1446042
-    # assert p2 == 0
+    print(p2)

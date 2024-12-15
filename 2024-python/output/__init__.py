@@ -9,6 +9,13 @@ D = [
     (0, -1),
 ]
 
+Di = [
+    (-1, -1),
+    (-1, 1),
+    (1, -1),
+    (1, 1),
+]
+
 # Directions for 2D matrices, as a dict with keys U, R, D, L
 DD = {
     "U": (-1, 0),
