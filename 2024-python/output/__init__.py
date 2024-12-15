@@ -42,6 +42,11 @@ def ints(s):
     return [int(n) for n in re.findall(r"\d+", s)]
 
 
+def sints(s):
+    """Extract all signed integers from a string"""
+    return [int(n) for n in re.findall(r"-?\d+", s)]
+
+
 def mhd(a, b):
     """Calculates the Manhattan distance between 2 positions in the format (y, x) or (x, y)"""
     ar, ac = a
