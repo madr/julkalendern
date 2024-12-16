@@ -69,7 +69,7 @@ def mdbg(m):
 def vdbg(seen, h, w):
     """Print-debug visited positions of a matrix"""
     for r in range(h):
-        print("".join(["#" if (r, c) in seen else "." for c in range(w)]))
+        print("".join(["#" if (r, c) in seen else " " for c in range(w)]))
 
 
 def cw(y, x):
