@@ -16,7 +16,9 @@ except ValueError:
     name = None
 
 print(
-    f"\nAdvent of Code {year}" "\n###################" "\n\nby Anders Englöf Ytterström"
+    f"\n\033[95m\033[1mAdvent of Code {year}\033[0m"
+    "\n###################"
+    "\n\n\033[96mby Anders Englöf Ytterström\033[0m"
 )
 
 Path("./input").mkdir(parents=True, exist_ok=True)
@@ -110,10 +112,10 @@ for i in [str(n).zfill(2) for n in range(1, 26)]:
             except AttributeError:
                 pass
             if p1:
-                print(f"    1) {p1}")
+                print(f"    \033[92m1)\033[0m {p1}")
                 stars += 1
             if p2:
-                print(f"    2) {p2}")
+                print(f"    \033[92m2)\033[0m {p2}")
                 stars += 1
         except IOError:
             pass

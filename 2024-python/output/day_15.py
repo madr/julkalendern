@@ -33,101 +33,71 @@ def solve(data):
         for move in movements:
             r, c = pos
             dr, dc = O[move]
-            moved = False
+            move_boxes = True
+            blocked = False
 
-            match move:
-                case "^":
-                    targets = [((v, c), grid[(v, c)]) for v in range(r)][::-1]
-                case "<":
-                    targets = [((r, v), grid[(r, v)]) for v in range(c)][::-1]
-                case "v":
-                    targets = [((v, c), grid[(v, c)]) for v in range(r + 1, H)]
-                case ">":
-                    targets = [((r, v), grid[(r, v)]) for v in range(c + 1, W)]
-
-            if "." not in map(lambda pv: pv[1], targets):
+            if (r + dr, c + dc) not in grid:
                 continue
 
-            if grid[(r + dr, c + dc)] == ".":
-                moved = True
+            match grid[(r + dr, c + dc)]:
+                case ".":
+                    move_boxes = False
+                case "#":
+                    move_boxes = False
+                    continue
 
-            if grid[(r + dr, c + dc)] == "O" or (
-                grid[(r + dr, c + dc)] in "[]" and dc != 0
-            ):
-                canmove = False
-                flips = []
+            if move_boxes:
+                seen = set()
 
-                for tpos, tvalue in targets:
-                    flips.append((tpos, tvalue))
-
-                    if tvalue == "#":
-                        break
-
-                    if tvalue == ".":
-                        canmove = True
-                        break
-
-                if canmove:
-                    rotated = [value for _, value in flips]
-                    rotated = rotated[-1:] + rotated[:-1]
-
-                    for offset, pos in enumerate(flips):
-                        grid[pos[0]] = rotated[offset]
-
-                    moved = True
-
-            if grid[(r + dr, c + dc)] in "[]" and dc == 0 and dr != 0:
-                canmove = True
-                bs = set()
-                bmod = O[move][0]
-
-                Q = [(r + bmod, c)]
+                Q = [(r + dr, c + dc)]
 
                 while Q:
                     rr, cc = Q.pop(0)
 
-                    if (rr, cc) in bs:
+                    if (rr, cc) in seen:
                         continue
 
-                    bs.add((rr, cc))
+                    if (rr, cc) not in grid:
+                        continue
 
                     if grid[(rr, cc)] == "#":
-                        canmove = False
+                        blocked = True
                         continue
 
-                    if grid[(rr, cc)] in "@.":
+                    seen.add((rr, cc))
+
+                    if grid[(rr, cc)] in ".":
                         continue
 
-                    match grid[(rr, cc)]:
-                        case "]":
-                            Q.append((rr + bmod, cc))
-                            Q.append((rr, cc - 1))
-                        case "[":
-                            Q.append((rr + bmod, cc))
-                            Q.append((rr, cc + 1))
+                    Q.append((rr + dr, cc + dc))
+                    if dr != 0:
+                        match grid[(rr, cc)]:
+                            case "]":
+                                Q.append((rr, cc - 1))
+                            case "[":
+                                Q.append((rr, cc + 1))
 
-                if canmove:
-                    patchset = {
-                        (rr, cc): (rr + bmod, cc)
-                        for rr, cc in bs
-                        if grid[(rr, cc)] != "."
-                    }
+                if blocked:
+                    continue
 
-                    dotset = set(bs) - set(patchset.values())
+                patchset = {
+                    (rr, cc): (rr + dr, cc + dc)
+                    for rr, cc in seen
+                    if grid[(rr, cc)] != "."
+                }
 
-                    for psf, pst in sorted(patchset.items())[::-bmod]:
-                        psnv = grid[psf]
-                        grid[pst] = psnv
+                dotset = set(seen) - set(patchset.values())
 
-                    for rk in dotset:
-                        grid[rk] = "."
+                for oldpos, newpos in sorted(patchset.items())[:: -(dr + dc)]:
+                    value = grid[oldpos]
+                    grid[newpos] = value
 
-                    moved = True
+                for dot in dotset:
+                    grid[dot] = "."
 
-            if moved:
-                grid[(r, c)] = "."
-                grid[(r + dr, c + dc)] = "@"
-                pos = r + dr, c + dc
+            grid[(r, c)] = "."
+            grid[(r + dr, c + dc)] = "@"
+            pos = r + dr, c + dc
 
         answers.append(sum(k[0] * 100 + k[1] for k, v in grid.items() if v in "O["))
 
